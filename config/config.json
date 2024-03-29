@@ -1,0 +1,10 @@
+ {
+    "development": {
+      "username": "root",
+      "password": "Manish@123",
+      "database": "ecomdb",
+      "host": "localhost",
+      "dialect": "mysql"
+    }
+  }
+  
