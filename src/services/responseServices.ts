@@ -140,6 +140,8 @@ export const getResponseMessage = (message: string) => {
     EVENT_DETAILS_UPDATION_FAILED: "Failed to Update the Event Details",
     EVENT_DELETION_SUCCESS: "Event Deleted Successfully",
     FAILED_TO_DELETE_EVENT: "Failed to Delete the Event",
+    NO_ELECTRONICS_FOUND: "No Electronics Found",
+    ELECTRONICS_FOUND: "Electronics Found",
   };
 
   return messageConstant[message] || null;

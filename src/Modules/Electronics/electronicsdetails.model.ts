@@ -1,11 +1,10 @@
 import { sequelize } from "@loaders/database";
 import { DataTypes, ModelDefined } from "sequelize";
 import { IElectronics, CreationIElectronicsDTO } from "../Electronics/electronics.dtos";
-import { ElectronicDetailsModel } from "./electronicsdetails.model";
 
-export const ElectronicModel: ModelDefined<IElectronics, CreationIElectronicsDTO> =
+export const ElectronicDetailsModel: ModelDefined<IElectronics, CreationIElectronicsDTO> =
     sequelize.define(
-        "Electronics",
+        "ElectronicDetails",
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -13,16 +12,28 @@ export const ElectronicModel: ModelDefined<IElectronics, CreationIElectronicsDTO
                 allowNull: false,
                 autoIncrement: true,
             },
-            category_type: {
-                type: DataTypes.STRING,
+            category_id: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                onDelete: "CASCADE",
+                onUpdate: "CASCADE",
+                references: {
+                    model: {
+                        tableName: "Electronics"
+                    },
+                    key: "id"
+                }
+            },
+            price: {
+                type: DataTypes.INTEGER,
                 allowNull: false
             },
-            image: {
-                type: DataTypes.STRING,
+            quantity: {
+                type: DataTypes.INTEGER,
                 allowNull: false
             },
-            title: {
-                type: DataTypes.STRING,
+            ratings: {
+                type: DataTypes.FLOAT,
                 allowNull: false
             },
             created_at: {
@@ -37,16 +48,7 @@ export const ElectronicModel: ModelDefined<IElectronics, CreationIElectronicsDTO
             },
         },
         {
-            tableName: "Electronics",
+            tableName: "ElectronicDetails",
             timestamps: false,
         }
     );
-ElectronicModel.hasMany(ElectronicDetailsModel, {
-    foreignKey: "category_id",
-    onDelete: "CASCADE"
-});
-
-
-ElectronicDetailsModel.belongsTo(ElectronicModel, {
-    foreignKey: "category_id"
-});
