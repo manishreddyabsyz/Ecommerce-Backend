@@ -12,6 +12,16 @@ export interface ResponseDto {
   errorDetails?: any;
 }
 
+
+export interface SearchBarDto {
+  filter?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+  brand?: string;
+  status?: number;
+}
+
 export interface Request extends ExpressRequest {
   user?: string | JwtPayload | UserJwtDetailsDTO;
 }

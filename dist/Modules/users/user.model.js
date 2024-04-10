@@ -48,6 +48,14 @@ exports.UsersModel = database_1.sequelize.define("Users", {
         allowNull: false,
         defaultValue: sequelize_1.DataTypes.NOW,
     },
+    cart: {
+        type: sequelize_1.DataTypes.JSON,
+        allowNull: false,
+    },
+    wishlist: {
+        type: sequelize_1.DataTypes.JSON,
+        allowNull: false,
+    },
 }, {
     tableName: "Users",
     timestamps: false,

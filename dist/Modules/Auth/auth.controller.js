@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userSignin = exports.userSignup = void 0;
+exports.getToken = exports.userSignin = exports.userSignup = void 0;
 const joi_1 = __importDefault(require("joi"));
 const AuthServices = __importStar(require("./auth.services"));
 const helperfunction_1 = require("@utils/helperfunction");
@@ -96,4 +96,35 @@ const userSignin = async (req, res) => {
     }
 };
 exports.userSignin = userSignin;
+const getToken = async (req, res) => {
+    try {
+        let response;
+        const userDetails = req.body;
+        const schema = joi_1.default.object().options({}).keys({
+            refreshtoken: joi_1.default.string().required(),
+            id: joi_1.default.number().required()
+        });
+        const validateResult = await (0, helperfunction_1.schemaValidation)(userDetails, schema);
+        if (validateResult.status) {
+            response = await AuthServices.getToken(userDetails);
+            response = (0, responseServices_1.sendResponse)(response);
+            return res.json(response);
+        }
+        else {
+            response = (0, responseServices_1.sendResponse)(validateResult);
+            return res.json(response);
+        }
+    }
+    catch (error) {
+        let result = (0, responseServices_1.setErrorResponse)({
+            statusCode: 500,
+            message: (0, responseServices_1.getResponseMessage)("SOMETHING_WRONG"),
+            error: error,
+            details: error,
+        });
+        result = (0, responseServices_1.sendResponse)(result);
+        return res.json(result);
+    }
+};
+exports.getToken = getToken;
 //# sourceMappingURL=auth.controller.js.map

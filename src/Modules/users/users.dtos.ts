@@ -8,6 +8,7 @@ export interface IUsers {
   created_at: Date;
   updated_at: Date;
   accesstoken: string;
+  cart: string;
   refreshtoken: string;
 }
 
@@ -20,6 +21,7 @@ export interface CreationIUsersDTO {
   id?: number;
   accesstoken?: string;
   refreshtoken?: string;
+  cart?: string;
 }
 
 export interface UserJwtDetailsDTO {

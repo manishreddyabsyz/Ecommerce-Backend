@@ -42,5 +42,8 @@ exports.MenModel = database_1.sequelize.define("Men", {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
+}, {
+    tableName: "Men",
+    timestamps: false,
 });
 //# sourceMappingURL=men.model.js.map

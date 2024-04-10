@@ -78,3 +78,33 @@ export const userSignin = async (req: Request, res: Response): Promise<any> => {
     return res.json(response);
   }
 };
+
+export const getToken = async (req: Request, res: Response): Promise<any> => {
+  try {
+    let response: ResponseDto;
+    const userDetails = req.body;
+    const schema = Joi.object().options({}).keys({
+      refreshtoken: Joi.string().required(),
+      id: Joi.number().required()
+    });
+    const validateResult: ResponseDto = await schemaValidation(userDetails, schema);
+    if (validateResult.status) {
+      response = await AuthServices.getToken(userDetails);
+      response = sendResponse(response);
+      return res.json(response);
+    } else {
+      response = sendResponse(validateResult);
+      return res.json(response);
+    }
+  }
+  catch (error) {
+    let result: ResponseDto = setErrorResponse({
+      statusCode: 500,
+      message: getResponseMessage("SOMETHING_WRONG"),
+      error: error,
+      details: error,
+    });
+    result = sendResponse(result);
+    return res.json(result);
+  }
+};

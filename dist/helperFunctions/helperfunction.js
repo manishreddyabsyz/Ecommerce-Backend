@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendmail = exports.genrateRefreshToken = exports.generateAccessToken = exports.schemaValidation = void 0;
+exports.sendmail = exports.generateRefreshToken = exports.generateAccessToken = exports.schemaValidation = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const responseServices_1 = require("@services/responseServices");
@@ -75,7 +75,7 @@ const generateAccessToken = async (userDetails) => {
     }
 };
 exports.generateAccessToken = generateAccessToken;
-const genrateRefreshToken = async (userDetails) => {
+const generateRefreshToken = async (userDetails) => {
     const { firstname, lastname, email } = userDetails;
     const payload = {
         firstname,
@@ -100,7 +100,7 @@ const genrateRefreshToken = async (userDetails) => {
         return result;
     }
 };
-exports.genrateRefreshToken = genrateRefreshToken;
+exports.generateRefreshToken = generateRefreshToken;
 const sendmail = async (userDetails, username) => {
     try {
         const sendmailtousers = await transporter.sendMail({
