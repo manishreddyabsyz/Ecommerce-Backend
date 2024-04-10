@@ -9,9 +9,10 @@ import {
 import bcrypt from "bcryptjs";
 import {
   generateAccessToken,
-  genrateRefreshToken,
+  generateRefreshToken,
   sendmail,
 } from "@utils/helperfunction";
+import jwt from "jsonwebtoken";
 import { CreationIUsersDTO, UserJwtDetailsDTO } from "../users/users.dtos";
 import { response } from "express";
 export const candidateSignup = async (
@@ -38,7 +39,7 @@ export const candidateSignup = async (
     const saltrounds: string = await bcrypt.genSalt(10);
     const hashpassword: string = await bcrypt.hash(password, saltrounds);
     const accesstoken: any = await generateAccessToken(userDetails);
-    const refreshtoken: any = await genrateRefreshToken(userDetails);
+    const refreshtoken: any = await generateRefreshToken(userDetails);
 
     const username = `${firstname} ${lastname}`;
 
@@ -126,7 +127,7 @@ export const candidateSignin = async (
     };
 
     const access_token: any = await generateAccessToken(userDetails);
-    const refresh_token: any = await genrateRefreshToken(userDetails);
+    const refresh_token: any = await generateRefreshToken(userDetails);
 
     await UsersModel.update(
       {
@@ -161,5 +162,79 @@ export const candidateSignin = async (
       details: error,
     });
     return result;
+  }
+};
+
+export const getToken = async (
+  inputDetails: CreationIUsersDTO
+): Promise<ResponseDto> => {
+  try {
+    let response: ResponseDto;
+    const { refreshtoken, id } = inputDetails;
+    const userData: any = await UsersModel.findOne({ where: { id: id } });
+    if (!userData || userData.length === 0) {
+      return setErrorResponse({
+        statusCode: 404,
+        message: getResponseMessage("USERS_NOT_FOUND"),
+      });
+    }
+
+    const userDetails = {
+      id: userData.id,
+      first_name: userData.first_name,
+      last_name: userData.last_name,
+      gender: userData.gender,
+      email: userData.email,
+    };
+
+    const tokenCreationTime = Date.parse(userData.created_at);
+    const currentTime = Date.now();
+    const tokenExpiryTime = tokenCreationTime + 28 * 24 * 60 * 60 * 1000;
+    const timeDifference = tokenExpiryTime - currentTime;
+    if (timeDifference > 0) {
+      const decodedToken = await jwt.verify(
+        refreshtoken,
+        process.env.REFRESH_SECRET_KEY
+      );
+      if (!decodedToken) {
+        return (response = setErrorResponse({
+          statusCode: 404,
+          message: getResponseMessage("INVAILD_REFRESH_TOKEN"),
+        }));
+      }
+
+      const newAccessToken = await generateAccessToken(userDetails);
+      const data = { access_token: newAccessToken, refreshtoken, id };
+
+      return setSuccessResponse({
+        statusCode: 200,
+        message: getResponseMessage("TOKEN_GENERATED_AGAIN"),
+        data,
+      });
+    }
+    const saltRounds = await bcrypt.genSalt(10);
+    const newAccessToken = await generateAccessToken(userDetails);
+    const newRefreshToken = (await generateRefreshToken(userDetails)) as string;
+    const hashedRefreshToken = bcrypt.hash(
+      newRefreshToken,
+      saltRounds
+    ) as unknown as string;
+    const data = {
+      access_token: newAccessToken,
+      refresh_token: hashedRefreshToken,
+      id,
+    };
+    return setSuccessResponse({
+      statusCode: 200,
+      message: getResponseMessage("TOKEN_GENERATED_AGAIN"),
+      data,
+    });
+  } catch (error) {
+    return setErrorResponse({
+      statusCode: 500,
+      message: getResponseMessage("SOMETHING_WRONG"),
+      error,
+      details: error,
+    });
   }
 };

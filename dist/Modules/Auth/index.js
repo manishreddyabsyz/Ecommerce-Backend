@@ -27,6 +27,7 @@ const express_1 = require("express");
 const AuthController = __importStar(require("./auth.controller"));
 const router = (0, express_1.Router)();
 router.post("/user-signup", AuthController.userSignup);
+router.post("/get-token", AuthController.getToken);
 router.post("/user-signin", AuthController.userSignin);
 exports.default = router;
 //# sourceMappingURL=index.js.map

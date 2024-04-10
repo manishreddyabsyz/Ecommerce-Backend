@@ -2,7 +2,7 @@ import { sequelize } from "@loaders/database";
 import { DataTypes, ModelDefined } from "sequelize";
 import { CreationIUsersDTO, IUsers } from "../users/users.dtos";
 
-export const  UsersModel: ModelDefined<IUsers, CreationIUsersDTO> =
+export const UsersModel: ModelDefined<IUsers, CreationIUsersDTO> =
   sequelize.define(
     "Users",
     {
@@ -49,6 +49,14 @@ export const  UsersModel: ModelDefined<IUsers, CreationIUsersDTO> =
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW,
+      },
+      cart: {
+        type: DataTypes.JSON,
+        allowNull: false,
+      },
+      wishlist: {
+        type: DataTypes.JSON,
+        allowNull: false,
       },
     },
     {

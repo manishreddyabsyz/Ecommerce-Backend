@@ -78,7 +78,7 @@ export const generateAccessToken = async (userDetails: any) => {
   }
 };
 
-export const genrateRefreshToken = async (userDetails: any) => {
+export const generateRefreshToken = async (userDetails: any) => {
   const { firstname, lastname, email } = userDetails;
   const payload = {
     firstname,
